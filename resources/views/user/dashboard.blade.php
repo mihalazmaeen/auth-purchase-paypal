@@ -167,6 +167,48 @@
         <!-- / Navbar -->
 
         <!-- Content wrapper -->
+        @if (Auth::user()->email=="admin@mail.com")
+        <div class="card">
+          <h5 class="card-header">Table Basic</h5>
+          <div class="table-responsive text-nowrap">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Verified Email</th>
+
+                </tr>
+              </thead>
+              <tbody class="table-border-bottom-0">
+                @foreach ($users as $user )
+                <tr>
+                  <td><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong>{{$user->name}}</strong></td>
+                  <td>{{$user->email}}</td>
+                  <td>{{$user->email_verified_at != null ? 'Yes' : 'No'}}</td>
+                </tr>
+                @endforeach
+              
+              </tbody>
+            </table>
+          </div>
+          <form action="{{ route('setting.update') }}" method="POST">
+            @csrf
+            <div class="form-group">
+                <label for="paypal_client_id">PayPal Client ID</label>
+                <input type="text" class="form-control" id="paypal_client_id" name="paypal_client_id" value="{{ old('paypal_client_id', $settings['paypal_client_id'] ?? '') }}" required>
+            </div>
+    
+            <div class="form-group">
+                <label for="paypal_secret">PayPal Secret</label>
+                <input type="text" class="form-control" id="paypal_secret" name="paypal_secret" value="{{ old('paypal_secret', $settings['paypal_secret'] ?? '') }}" required>
+            </div>
+    
+            <button type="submit" class="btn btn-primary">Save Settings</button>
+        </form>
+        </div>
+
+        @else
         <div class="content-wrapper">
           <!-- Content -->
 
@@ -228,6 +270,7 @@
 
           <div class="content-backdrop fade"></div>
         </div>
+        @endif
         <!-- Content wrapper -->
       </div>
       <!-- / Layout page -->

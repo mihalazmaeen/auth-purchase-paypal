@@ -85,7 +85,7 @@
               <div data-i18n="Analytics">Dashboard</div>
             </a>
           </li><li class="menu-item">
-            <a href="index.html" class="menu-link">
+            <a href="{{route('logout')}}" class="menu-link">
               <i class="menu-icon tf-icons bx bx-power-off"></i>
               <div data-i18n="Analytics">Logout</div>
             </a>

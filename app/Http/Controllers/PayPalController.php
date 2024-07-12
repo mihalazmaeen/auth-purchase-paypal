@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use App\Models\Setting;
 
 class PayPalController extends Controller
 {
@@ -13,8 +14,8 @@ class PayPalController extends Controller
 
     public function __construct()
     {
-        $this->clientId = config('services.paypal.client_id');
-        $this->secret = config('services.paypal.secret');
+        $this->clientId = Setting::where('key', 'paypal_client_id')->value('value');
+        $this->secret = Setting::where('key', 'paypal_secret')->value('value');
         $this->baseUrl = config('services.paypal.mode') === 'sandbox'
             ? 'https://api-m.sandbox.paypal.com'
             : 'https://api-m.paypal.com';
