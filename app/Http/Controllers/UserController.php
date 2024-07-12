@@ -10,4 +10,10 @@ class UserController extends Controller
     {
         return view('user.dashboard');
     }
+    public function Checkout($productName, $price)
+    {
+
+        $productName = urldecode($productName);
+        return view('user.checkout', ['productName' => $productName, 'price' => $price]);
+    }
 }

@@ -31,9 +31,12 @@ class VerificationController extends Controller
                 return response()->json(['error' => 'Invalid or expired OTP!'], 404);
             }
     
-            $user = $otp->user;
+           
+            $user=User::where('id',$otp->user_id)->first();
+      
+            Auth::login($user);
+
             $otp->delete();
-    
             // Log the user in
            
     

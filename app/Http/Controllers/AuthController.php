@@ -13,6 +13,7 @@ use App\Mail\VerifyOtp;
 use Illuminate\Support\Facades\Redis;
 use App\Models\Otp;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
@@ -49,6 +50,9 @@ class AuthController extends Controller
         ]);
 
         $user = User::where('email', $request->email)->first();
+        if($user->email_verified_at == null){
+            return redirect()->route('verify_email.show');
+        }
        
 
         if (!$user) {
@@ -79,5 +83,14 @@ class AuthController extends Controller
     public function ShowOtp()
     {
         return view('auth.otp');
+    }
+    public function Logout(Request $request)
+    {
+        Auth::logout();
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect()->route('login.show');
     }
 }

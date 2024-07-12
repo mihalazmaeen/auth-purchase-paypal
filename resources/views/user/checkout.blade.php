@@ -1,6 +1,8 @@
 @extends('master')
 
 
+
+
 @section('content')
 
 <div class="layout-wrapper layout-content-navbar">
@@ -77,13 +79,13 @@
 
         <ul class="menu-inner py-1">
           <!-- Dashboard -->
-          <li class="menu-item active">
+          <li class="menu-item">
             <a href="index.html" class="menu-link">
               <i class="menu-icon tf-icons bx bx-home-circle"></i>
               <div data-i18n="Analytics">Dashboard</div>
             </a>
           </li><li class="menu-item">
-            <a href="{{ route('logout') }}" class="menu-link">
+            <a href="index.html" class="menu-link">
               <i class="menu-icon tf-icons bx bx-power-off"></i>
               <div data-i18n="Analytics">Logout</div>
             </a>
@@ -151,8 +153,7 @@
                     <div class="dropdown-divider"></div>
                   </li>
                   <li>
-                    
-                    <a class="dropdown-item" href="{{ route('logout') }}">
+                    <a class="dropdown-item" href="auth-login-basic.html">
                       <i class="bx bx-power-off me-2"></i>
                       <span class="align-middle">Log Out</span>
                     </a>
@@ -171,62 +172,74 @@
           <!-- Content -->
 
           <div class="container-xxl flex-grow-1 container-p-y">
-
+            <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Dashboard /</span> Checkout Page</h4>
+        
             <!-- Examples -->
             <div class="row mb-5">
-              <div class="col-md-6 col-lg-4 mb-3">
-                  <div class="card h-100">
-                      <img class="card-img-top" src="../assets/img/elements/2.jpg" alt="Card image cap" />
-                      <div class="card-body">
-                          <h5 class="card-title">Orange Paint Card</h5>
-                          <p class="card-text">
-                              Some quick example text to build on the card title and make up the bulk of the card's content.
-                          </p>
-                          <a href="{{ route('checkout', ['productName' => urlencode('Orange Paint Card'), 'price' => 50]) }}" class="btn btn-outline-primary">
-                              <i class="tf-icons bx bx-cart-alt me-1"></i>Buy Now
-                          </a>
-                          <span style="float: right; font-size: 20px; font-weight: 700;">$50</span>
-                      </div>
-                  </div>
-              </div>
-              <div class="col-md-6 col-lg-4 mb-3">
-                  <div class="card h-100">
-                      <img class="card-img-top" src="../assets/img/elements/5.jpg" alt="Card image cap" />
-                      <div class="card-body">
-                          <h5 class="card-title">Tea Cup Art</h5>
-                          <p class="card-text">
-                              Some quick example text to build on the card title and make up the bulk of the card's content.
-                          </p>
-                          <a href="{{ route('checkout', ['productName' => urlencode('Tea Cup Art'), 'price' => 35]) }}" class="btn btn-outline-primary">
-                              <i class="tf-icons bx bx-cart-alt me-1"></i>Buy Now
-                          </a>
-                          <span style="float: right; font-size: 20px; font-weight: 700;">$35</span>
-                      </div>
-                  </div>
-              </div>
-              <div class="col-md-6 col-lg-4 mb-3">
-                  <div class="card h-100">
-                      <img class="card-img-top" src="../assets/img/elements/4.jpg" alt="Card image cap" />
-                      <div class="card-body">
-                          <h5 class="card-title">Leg Tattoo Paint</h5>
-                          <p class="card-text">
-                              Some quick example text to build on the card title and make up the bulk of the card's content.
-                          </p>
-                          <a href="{{ route('checkout', ['productName' => urlencode('Leg Tattoo Paint'), 'price' => 65]) }}" class="btn btn-outline-primary">
-                              <i class="tf-icons bx bx-cart-alt me-1"></i>Buy Now
-                          </a>
-                          <span style="float: right; font-size: 20px; font-weight: 700;">$65</span>
-                      </div>
-                  </div>
-              </div>
-          </div>
-          
+                <div class="col-md-12 col-lg-12 mb-3">
+                    <div class="card mb-4">
+                        <h5 class="card-header">Item Info</h5>
+                        <div class="card-body">
+                            <div class="mb-3 row">
+                                <label for="item-name" class="col-md-2 col-form-label">Item Name</label>
+                                <div class="col-md-10">
+                                    <input class="form-control" type="text" value="{{ $productName }}" id="item-name" readonly />
+                                </div>
+                            </div>
+                            <div class="mb-3 row">
+                                <label for="amount" class="col-md-2 col-form-label">Amount</label>
+                                <div class="col-md-10">
+                                    <input class="form-control" type="text" value="{{ $price }}" id="amount" readonly />
+                                </div>
+                            </div>
+                            <div class="mb-3 row">
+                                <label for="total-payable" class="col-md-2 col-form-label">Total Payable</label>
+                                <div class="col-md-10">
+                                    <input class="form-control" type="text" value="{{ $price }}" id="total-payable" readonly />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card mb-4">
+                        <h5 class="card-header">Billing Info</h5>
+                        <div class="card-body">
+                            <form action="{{ route('paypal.createPayment') }}" method="POST">
+                                @csrf
+                                <input type="hidden" name="productName" value="{{ $productName }}">
+                                <input type="hidden" name="price" value="{{ $price }}">
+                                
+                                <div class="mb-3 row">
+                                    <label for="fullname" class="col-md-2 col-form-label">Full Name</label>
+                                    <div class="col-md-10">
+                                        <input class="form-control" type="text" name="fullname" id="fullname" required />
+                                    </div>
+                                </div>
+                                <div class="mb-3 row">
+                                    <label for="email" class="col-md-2 col-form-label">Email</label>
+                                    <div class="col-md-10">
+                                        <input class="form-control" type="email" name="email" id="email" required />
+                                    </div>
+                                </div>
+                                <div class="mb-3 row">
+                                    <label for="phone" class="col-md-2 col-form-label">Phone</label>
+                                    <div class="col-md-10">
+                                        <input class="form-control" type="tel" name="phone" id="phone" required />
+                                    </div>
+                                </div>
+                                <div class="mb-3 row">
+                                    <label for="address" class="col-md-2 col-form-label">Full Address</label>
+                                    <div class="col-md-10">
+                                        <textarea class="form-control" name="address" id="address" required></textarea>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 col-lg-12">
+                                    <button type="submit" class="btn btn-primary"><i class="tf-icons bx bx-cart-alt me-1"></i>Buy Now</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <!-- Examples -->
-          
-          <!-- / Content -->
-
-          <div class="content-backdrop fade"></div>
         </div>
         <!-- Content wrapper -->
       </div>
