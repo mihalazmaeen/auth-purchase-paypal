@@ -17,6 +17,7 @@ class VerificationController extends Controller
         $user->email_verified_at = now();
         $user->remember_token = null;
         $user->save();
+        session()->forget('email_for_resend');
 
         return redirect()->route('login.show')->with('status', 'Your email has been verified.');
     }

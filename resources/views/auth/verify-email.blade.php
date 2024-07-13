@@ -73,7 +73,11 @@
             <!-- /Logo -->
             <h4 class="mb-2">Verify Your email</h4>
             <p class="mb-4">Sent mail on your email. Please check inbox</p>
-              <button class="btn btn-primary d-grid w-100 mb-3">Resend the email</button>
+            <form methoid="POST" action="{{route("resend.email")}}" id="formAuthentication" >
+                @csrf
+                <button class="btn btn-primary d-grid w-100 mb-3">Resend the email</button>
+            </form>
+             
             <div class="text-center">
               <a href="{{route("login.show")}}" class="d-flex align-items-center justify-content-center">
                 <i class="bx bx-chevron-left scaleX-n1-rtl bx-sm"></i>

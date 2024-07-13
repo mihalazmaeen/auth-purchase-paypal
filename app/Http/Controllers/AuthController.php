@@ -17,28 +17,35 @@ use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
+
+
+    public function Login()
+    {
+        return view('auth.login');
+    }
+
     public function Register()
     {
         return view('auth.register');
     }
-    public function Registration(Request $request){
 
-        $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'confirmed'],
-        ]);
+    public function VerifyEmail()
+    {
+        return view('auth.verify-email');
+    }
+    public function ShowOtp()
+    {
+        return view('auth.otp');
+    }
+    public function Logout(Request $request)
+    {
+        Auth::logout();
 
-        $user = User::create([
-            'name' => $request->name,
-            'email' => strtolower($request->email), // Convert email to lowercase
-            'password' => Hash::make($request->password),
-            'remember_token' => Str::random(32),
-        ]);
+        $request->session()->invalidate();
+        session()->forget('email_for_resend');
+        $request->session()->regenerateToken();
 
-        Mail::to($user->email)->send(new VerifyEmail($user));
-        return redirect()->route('verify_email.show');
-
+        return redirect()->route('login.show');
     }
 
     public function LoginUser(Request $request){
@@ -79,25 +86,40 @@ class AuthController extends Controller
         Mail::to($user->email)->send(new VerifyOtp($otp));
         return redirect()->route('otp.show');
     }
-    public function Login()
-    {
-        return view('auth.login');
-    }
-    public function VerifyEmail()
-    {
-        return view('auth.verify-email');
-    }
-    public function ShowOtp()
-    {
-        return view('auth.otp');
-    }
-    public function Logout(Request $request)
-    {
-        Auth::logout();
 
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
+    public function Registration(Request $request){
 
-        return redirect()->route('login.show');
+        $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'password' => ['required', 'confirmed'],
+        ]);
+
+        $user = User::create([
+            'name' => $request->name,
+            'email' => strtolower($request->email), // Convert email to lowercase
+            'password' => Hash::make($request->password),
+            'remember_token' => Str::random(32),
+        ]);
+        session(['email_for_resend' => $user->email]);
+        Mail::to($user->email)->send(new VerifyEmail($user));
+        return redirect()->route('verify_email.show');
+
     }
+
+    public function ResendEmail(Request $request){
+
+        $email = session('email_for_resend');
+        $user = User::where('email', $email)->where('email_verified_at', null)->first();
+        if($user){
+            Mail::to($user->email)->send(new VerifyEmail($user));
+            return redirect()->route('verify_email.show');
+        }else{
+            return redirect()->route('login.show');
+        }
+
+    }
+
+
+
 }

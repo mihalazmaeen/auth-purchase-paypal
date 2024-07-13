@@ -141,8 +141,8 @@
                           </div>
                         </div>
                         <div class="flex-grow-1">
-                          <span class="fw-semibold d-block">John Doe</span>
-                          <small class="text-muted">Admin</small>
+                          <span class="fw-semibold d-block">{{Auth::user()->name}}</span>
+                          <small class="text-muted"></small>
                         </div>
                       </div>
                     </a>
@@ -192,7 +192,7 @@
               </tbody>
             </table>
           </div>
-          <form action="{{ route('setting.update') }}" method="POST">
+          <form action="{{ route('setting.update') }}" method="POST" class="formAuthentication mt-3">
             @csrf
             <div class="form-group">
                 <label for="paypal_client_id">PayPal Client ID</label>
@@ -204,7 +204,7 @@
                 <input type="text" class="form-control" id="paypal_secret" name="paypal_secret" value="{{ old('paypal_secret', $settings['paypal_secret'] ?? '') }}" required>
             </div>
     
-            <button type="submit" class="btn btn-primary">Save Settings</button>
+            <button type="submit" class="btn btn-primary mt-3">Save Settings</button>
         </form>
         </div>
 

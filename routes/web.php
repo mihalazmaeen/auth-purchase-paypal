@@ -20,6 +20,8 @@ Route::post('login-user', [AuthController::class, 'LoginUser'])->name('login.use
 Route::get('verify-email/{token}', [VerificationController::class, 'verify'])->name('verify-email');
 Route::post('verify-otp', [VerificationController::class, 'otp'])->name('verify-otp');
 Route::get('otp', [AuthController::class, 'ShowOtp'])->name('otp.show');
+Route::get('resend-email', [AuthController::class, 'ResendEmail'])->name('resend.email');
+
 
 
 Route::middleware([NotAuthenticated::class])->group(function () {
